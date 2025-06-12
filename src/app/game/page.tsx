@@ -4,8 +4,10 @@ import PokeSearch from "./PokeSearch";
 export default function Game() {
   return (
     <>
-    <h1>Yo</h1>
-    <PokeSearch/>
+    <div className="flex flex-col justify-center items-center">
+      <PokeSearch/>
+    </div>
+    
     </>
   );
 }

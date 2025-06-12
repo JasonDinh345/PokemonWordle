@@ -36,7 +36,7 @@ export default function PokeSearch() {
   ).slice(0,10)
 
   return (
-    <div>
+    <div className=' flex flex-col justify-center items-start'>
       <h1>Pokémon Search</h1>
       <input
         type="text"
@@ -46,14 +46,19 @@ export default function PokeSearch() {
       />
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <div>
-        {filteredPokemon && query !== "" && (
-          filteredPokemon.map((pokemon)=>
-            <PokeSuggestion pokemon={pokemon} key={pokemon.name}/>
-          )
-      )}
-      </div>
+      {filteredPokemon.length > 0 && query !== "" &&
+        <div className="m-2 flex flex-col justify-start overflow-y-auto hide-scrollbar max-h-60 rounded-md p-2 inset-shadow-sm inset-shadow-stone-500 bg-red-300">
+         
+            {filteredPokemon.map((pokemon) => (
+              <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
+            ))}
+            {filteredPokemon.length === 10 &&
+            <p className="text-sm text-gray-700 mt-2 text-center italic" >Refine your search to find more!</p>
+            }
+          
+        </div>
+      }
+      
     </div>
   );
 }
@@ -81,7 +86,7 @@ function PokeSuggestion({pokemon}:PokeSuggestionProp){
   },[pokemon.name])
     return(
         pokemonData  && (
-          <div className="flex flex-row justify-center items-center">
+          <div className="flex flex-row justify-center items-center w-50 border-4 rounded-2xl border-stone-100 bg-white hover:border-red-500 hover:bg-stone-200 m-1 box-content shadow-md shadow-stone-500">
             <h2 className="flex justify-center items-center">{pokemon.name}</h2>
             <Image src={pokemonData.sprites.front_default} width={50} height={50} alt={pokemon.name} />
         </div>
