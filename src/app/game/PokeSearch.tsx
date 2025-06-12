@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
+import { usePokemon } from '@/context/PokeChoiceContext';
 type PokemonData = {
     name: string;
     url: string;
@@ -31,35 +32,37 @@ export default function PokeSearch() {
   fetchNames();
 }, []);
 
-  const filteredPokemon: PokemonData[] = pokemonList.filter(pokemon =>
+  const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().includes(query.toLowerCase())
-  ).slice(0,10)
+  );
 
+  const filteredPokemon = matchingPokemon.slice(0, 10);
+  if(error){
+    return <p className="text-sm text-gray-700 p-2 text-center italic color-red">{error}</p>
+  }
   return (
-    <div className=' flex flex-col justify-center items-start'>
-      <h1>Pokémon Search</h1>
+    <div className="relative w-full max-w-sm">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Enter a Pokémon name"
+        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
       />
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {filteredPokemon.length > 0 && query !== "" &&
-        <div className="m-2 flex flex-col justify-start overflow-y-auto hide-scrollbar max-h-60 rounded-md p-2 inset-shadow-sm inset-shadow-stone-500 bg-red-300">
-         
-            {filteredPokemon.map((pokemon) => (
-              <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
-            ))}
-            {filteredPokemon.length === 10 &&
-            <p className="text-sm text-gray-700 mt-2 text-center italic" >Refine your search to find more!</p>
-            }
-          
+      {filteredPokemon.length > 0 && query !== "" && (
+        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto rounded-md bg-white shadow-lg border hide-scrollbar inset-shadow-sm inset-shadow-stone-500">
+          {filteredPokemon.map((pokemon) => (
+            <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
+          ))}
+          {matchingPokemon.length > 10 && (
+            <p className="text-sm text-gray-700 p-2 text-center italic">
+              Showing top 10 results. Refine your search to see more!
+            </p>
+          )}
         </div>
-      }
-      
-    </div>
+      )}
+  </div>
   );
 }
 
@@ -70,11 +73,12 @@ type PokeSuggestionType = {
   name: string
   sprites: SpriteData
 }
-type SpriteData = {
+export type SpriteData = {
   front_default: string
 }
 function PokeSuggestion({pokemon}:PokeSuggestionProp){
   const [pokemonData, setPokemonData] = useState<PokeSuggestionType | null>(null)
+  const {addChoice} = usePokemon();
   useEffect(()=>{
     const fetchData = async () => {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name.toLowerCase()}`);
@@ -86,10 +90,10 @@ function PokeSuggestion({pokemon}:PokeSuggestionProp){
   },[pokemon.name])
     return(
         pokemonData  && (
-          <div className="flex flex-row justify-center items-center w-50 border-4 rounded-2xl border-stone-100 bg-white hover:border-red-500 hover:bg-stone-200 m-1 box-content shadow-md shadow-stone-500">
-            <h2 className="flex justify-center items-center">{pokemon.name}</h2>
-            <Image src={pokemonData.sprites.front_default} width={50} height={50} alt={pokemon.name} />
-        </div>
+          <div className="flex items-center justify-between px-4 py-2 hover:bg-red-100 cursor-pointer border-b-2 border-stone-200" onClick={()=>addChoice(pokemonData.name)}>
+            <h2 className="capitalize">{pokemon.name}</h2>
+            <Image src={pokemonData.sprites.front_default} width={40} height={40} alt={pokemon.name} />
+          </div>
         )
        
     )
