@@ -3,16 +3,16 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import { usePokemon } from '@/context/PokeChoiceContext';
-type PokemonData = {
-    name: string;
-    url: string;
-};
+import { Pokemon } from './types';
+
+
 
 export default function PokeSearch() {
   const [query, setQuery] = useState("");
-  const [pokemonList, setPokemonList] = useState<PokemonData[]>([])
+  const [pokemonList, setPokemonList] = useState<Pick<Pokemon, 'name' | 'sprites'>[]>([])
   const [error, setError] = useState('');
-
+  const [isFocused, setIsFocused] = useState<boolean>(false)
+  const {pokemonChoiceList} = usePokemon();
   useEffect(() => {
   const fetchNames = async () => {
     try {
@@ -33,24 +33,26 @@ export default function PokeSearch() {
 }, []);
 
   const matchingPokemon = pokemonList.filter(pokemon =>
-    pokemon.name.toLowerCase().includes(query.toLowerCase())
-  );
+    pokemon.name.toLowerCase().includes(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
 
   const filteredPokemon = matchingPokemon.slice(0, 10);
   if(error){
     return <p className="text-sm text-gray-700 p-2 text-center italic color-red">{error}</p>
   }
+  
   return (
     <div className="relative w-full max-w-sm">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onFocus={()=>setIsFocused(true)}
+        onBlur={()=>setIsFocused(false)}
         placeholder="Enter a Pokémon name"
         className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
       />
 
-      {filteredPokemon.length > 0 && query !== "" && (
+      {filteredPokemon.length > 0 && query !== "" && isFocused && (
         <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto rounded-md bg-white shadow-lg border hide-scrollbar inset-shadow-sm inset-shadow-stone-500">
           {filteredPokemon.map((pokemon) => (
             <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
@@ -64,19 +66,8 @@ export default function PokeSearch() {
       )}
   </div>
   );
-}
 
-type PokeSuggestionProp = {
-    pokemon: PokemonData
-}
-type PokeSuggestionType = {
-  name: string
-  sprites: SpriteData
-}
-export type SpriteData = {
-  front_default: string
-}
-function PokeSuggestion({pokemon}:PokeSuggestionProp){
+  function PokeSuggestion({pokemon}:PokeSuggestionProp){
   const [pokemonData, setPokemonData] = useState<PokeSuggestionType | null>(null)
   const {addChoice} = usePokemon();
   useEffect(()=>{
@@ -88,13 +79,30 @@ function PokeSuggestion({pokemon}:PokeSuggestionProp){
       };
       fetchData();
   },[pokemon.name])
+  const handleClick = ()=>{
+    addChoice(pokemon.name)
+    setQuery("")
+  }
     return(
         pokemonData  && (
-          <div className="flex items-center justify-between px-4 py-2 hover:bg-red-100 cursor-pointer border-b-2 border-stone-200" onClick={()=>addChoice(pokemonData.name)}>
+          <div className="flex items-center justify-between px-4 py-2 hover:bg-red-100 cursor-pointer border-b-2 border-stone-200" onMouseDown={handleClick}>
             <h2 className="capitalize">{pokemon.name}</h2>
             <Image src={pokemonData.sprites.front_default} width={40} height={40} alt={pokemon.name} />
           </div>
         )
        
     )
+  }
+
 }
+
+type PokeSuggestionProp = {
+    pokemon: Pick<Pokemon, 'name' | 'sprites'>
+}
+type PokeSuggestionType = {
+  name: string
+  sprites: {
+    front_default: string
+  }
+}
+

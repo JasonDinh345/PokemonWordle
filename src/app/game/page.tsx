@@ -1,6 +1,6 @@
 import { PokemonChoiceProvider } from "@/context/PokeChoiceContext";
-import PokeSearch from "./PokeSearch";
-import PokeWordle from "./PokeWordle";
+import PokeSearch from "../../components/pokemon/PokeSearch";
+import PokeWordle from "../../components/pokemon/PokeWordle";
 
 
 export default function Game() {
