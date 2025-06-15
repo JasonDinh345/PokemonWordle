@@ -4,36 +4,19 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import { usePokemon } from '@/context/PokeChoiceContext';
 import { Pokemon } from './types';
+import { useAllPokemon } from '@/context/AllPokemonContext';
 
 
 
 export default function PokeSearch() {
   const [query, setQuery] = useState("");
-  const [pokemonList, setPokemonList] = useState<Pick<Pokemon, 'name' | 'sprites'>[]>([])
-  const [error, setError] = useState('');
+  
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const {pokemonChoiceList} = usePokemon();
-  useEffect(() => {
-  const fetchNames = async () => {
-    try {
-      const res = await fetch('https://pokeapi.co/api/v2/pokemon-species?limit=1000');
-      const data = await res.json();
-      const pokemonData = data.results.map((p: { name: string; url: string }) => ({
-        name: p.name,
-        url: p.url
-      }));
-      setPokemonList(pokemonData);
-    } catch (error) {
-      console.error("Failed to fetch Pokémon species:", error);
-      setError("Error has Occured")
-    }
-  };
+  const {allPokemon, error} = useAllPokemon();
 
-  fetchNames();
-}, []);
-
-  const matchingPokemon = pokemonList.filter(pokemon =>
-    pokemon.name.toLowerCase().includes(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
+  const matchingPokemon = allPokemon.filter(pokemon =>
+    pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
 
   const filteredPokemon = matchingPokemon.slice(0, 10);
   if(error){

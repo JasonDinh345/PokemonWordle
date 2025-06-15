@@ -18,16 +18,14 @@ export type Pokemon = {
     generation: {
         name: string
     }
-    evolution_chain: EvolutionChain
+    canEvolve: boolean
 }
 
-export type EvolutionChain = {
-    chain: EvolvesTo
-}
+
 
 export type EvolvesTo = {
-    speicies : {
+    species : {
         name: string
     },
-    evolves_to : EvolvesTo[] 
+    evolves_to : EvolvesTo[]
 }
