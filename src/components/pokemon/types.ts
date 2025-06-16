@@ -21,11 +21,15 @@ export type Pokemon = {
     canEvolve: boolean
 }
 
-
-
 export type EvolvesTo = {
     species : {
         name: string
     },
     evolves_to : EvolvesTo[]
 }
+export type GenerationPokemon = {
+    id : number
+    name :string 
+    pokemon_species : SimpleData[]
+}
+export type SimpleData =  {name: string, url: string}

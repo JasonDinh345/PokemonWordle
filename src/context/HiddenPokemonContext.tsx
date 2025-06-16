@@ -12,7 +12,7 @@ const HiddenPokemonContext = createContext<HiddenPokemonContextType | null>(null
 export const HiddenPokemonProvider = ({ children }: { children: ReactNode }) => {
     const [hiddenPokemon, setHiddenPokemon] = useState<Pokemon | null>(null);
     console.log(hiddenPokemon)
-    const {getRandomPokemon, allPokemon} = useAllPokemon();
+    const {getRandomPokemon, pokemonList} = useAllPokemon();
 
     const resetHiddenPokemon = useCallback(async()=>{
     
@@ -22,10 +22,10 @@ export const HiddenPokemonProvider = ({ children }: { children: ReactNode }) => 
     },[getRandomPokemon])
     
     useEffect(()=>{
-        if(allPokemon.length > 0){
+        if(pokemonList.length > 0){
             resetHiddenPokemon()
         }
-    },[resetHiddenPokemon, allPokemon])
+    },[resetHiddenPokemon, pokemonList])
     return (
         <HiddenPokemonContext.Provider value={{hiddenPokemon, resetHiddenPokemon}}>
             {children}

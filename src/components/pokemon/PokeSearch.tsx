@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import { usePokemon } from '@/context/PokeChoiceContext';
-import { Pokemon } from './types';
 import { useAllPokemon } from '@/context/AllPokemonContext';
 
 
@@ -13,9 +12,9 @@ export default function PokeSearch() {
   
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const {pokemonChoiceList} = usePokemon();
-  const {allPokemon, error} = useAllPokemon();
+  const {pokemonList, error} = useAllPokemon();
 
-  const matchingPokemon = allPokemon.filter(pokemon =>
+  const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
 
   const filteredPokemon = matchingPokemon.slice(0, 10);
@@ -80,7 +79,7 @@ export default function PokeSearch() {
 }
 
 type PokeSuggestionProp = {
-    pokemon: Pick<Pokemon, 'name' | 'sprites'>
+    pokemon: {name: string, url:string}
 }
 type PokeSuggestionType = {
   name: string

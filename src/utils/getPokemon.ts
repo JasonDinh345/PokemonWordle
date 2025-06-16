@@ -1,4 +1,4 @@
-import { EvolvesTo, Pokemon } from "@/components/pokemon/types";
+import { EvolvesTo, GenerationPokemon, Pokemon } from "@/components/pokemon/types";
 
 export const getPokemon = async(name:string):Promise<Pokemon> =>{
     const fetchData = async ():Promise<Pokemon | undefined> => {
@@ -51,7 +51,7 @@ export const getPokemon = async(name:string):Promise<Pokemon> =>{
     if(result){
         return result as Pokemon
     }
-    throw new Error("Pokemon doesn't exist!")
+    throw new Error("Pokemon doesn't exist!" + name)
 }
 const determineCanEvolve = (name: string, evoChain: EvolvesTo)=>{
 
@@ -60,4 +60,18 @@ const determineCanEvolve = (name: string, evoChain: EvolvesTo)=>{
     }
    
     return determineCanEvolve(name, evoChain.evolves_to[0])
+}
+export const getAllPokemonInGen = async(generationID: number):Promise<GenerationPokemon>=>{
+    try{
+        const generationRes = await fetch(`https://pokeapi.co/api/v2/generation/${generationID}/`)
+        const generationData = await generationRes.json()
+        return {
+            id: generationData.id,
+            name: generationData.main_region.name,
+            pokemon_species: generationData.pokemon_species
+        } as GenerationPokemon
+    }catch(err){
+        console.log(err)
+    }
+    throw new Error("Generation doesn't exist!")
 }
