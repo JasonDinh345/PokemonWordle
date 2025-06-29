@@ -1,13 +1,14 @@
 'use client'; 
 import { getAllPokemonInGen, getPokemon } from '@/utils/getPokemon';
 import { Pokemon, SimpleData } from '@/components/pokemon/types';
-import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useMemo, useCallback } from 'react';
 import { allGenerations } from '@/utils/allGenerations';
 import { useChosenGenerations } from './ChosenGenerationContext';
 type AllPokemonContextType = {
     pokemonList : SimpleData[],
     getRandomPokemon: () => Promise<Pokemon>;
     error: string | null
+    isReady : boolean
 }
 const AllPokemonContext = createContext<AllPokemonContextType | undefined>(undefined)
 
@@ -23,39 +24,48 @@ export const AllPokemonProvider = ({children}:{children: ReactNode}) =>{
             Object.values(allGenerations).map(genID => [genID, []])
             ) as PokemonByGeneration
     ); 
+    const [loadedGenerations, setLoadedGenerations] = useState<Set<number>>(new Set());
     const {chosenGenerations} = useChosenGenerations();
+    const [isReady, setIsReady] = useState<boolean>(false)
     const [error, setError] = useState<string| null>(null)
+
+    //do a is ready
     useEffect(() => {
-        const updateGen = async (genID: number) => {
-            const data = await getAllPokemonInGen(genID);
-            setAllPokemonByGeneration(prev => ({
-                ...prev,
-                [genID]: data.pokemon_species
-        }));
-        }
-        chosenGenerations.forEach((genID)=>{
-            if(allPokemonByGeneration[genID]?.length === 0){
-                updateGen(genID)
-            }
-        })
        
-    }, [chosenGenerations]);
+        setIsReady(false)
+        const fetchGens = async () => {
+            for (const genID of chosenGenerations) {
+                if (!loadedGenerations.has(genID)) {
+                    try {
+                        const data = await getAllPokemonInGen(genID);
+                        setAllPokemonByGeneration(prev => ({
+                            ...prev,
+                            [genID]: data.pokemon_species
+                        }));
+                        setLoadedGenerations(prev => new Set(prev).add(genID));
+                    } catch (err) {
+                        console.log(err)
+                        setError("Failed to load Pokémon data.");
+                    }
+                }
+            }
+        };
+        
+        fetchGens();
+        setIsReady(true)
+    }, [chosenGenerations, loadedGenerations]);
 
-    const pokemonList = useMemo(():SimpleData[]=>{
-        let list:SimpleData[] = []
-        chosenGenerations.forEach(genID=>
-            list = [...list, ...allPokemonByGeneration[genID]]
-        )
-        return list
-    }, [chosenGenerations, allPokemonByGeneration])
-
-    const getRandomPokemon = async():Promise<Pokemon> =>{
-        const pokemonName: string = pokemonList[Math.floor(Math.random() * pokemonList.length)].name
-        const pokemon: Pokemon  = await getPokemon(pokemonName)  
-        return pokemon
-    }
+    const pokemonList = useMemo((): SimpleData[] => 
+        chosenGenerations.flatMap(genID => allPokemonByGeneration[genID] || []),
+    [allPokemonByGeneration]);
+    //console.log(pokemonList)
+    const getRandomPokemon = useCallback(async (): Promise<Pokemon> => {
+        const name = pokemonList[Math.floor(Math.random() * pokemonList.length)].name;
+        return await getPokemon(name);
+    
+    }, [pokemonList]);
     return(
-         <AllPokemonContext.Provider value={{pokemonList, getRandomPokemon, error  }}>
+         <AllPokemonContext.Provider value={{pokemonList, getRandomPokemon, error, isReady }}>
             {children}
         </AllPokemonContext.Provider>
     )

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {Sora } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import { ReactScan } from "@/components/ReactScan";
 
 const sora = Sora({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <ReactScan/>
       <body
         className={`${sora.className} antialiased`}
       >

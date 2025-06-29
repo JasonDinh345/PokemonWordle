@@ -19,6 +19,7 @@ export type Pokemon = {
         name: string
     }
     canEvolve: boolean
+    cry: string
 }
 
 export type EvolvesTo = {

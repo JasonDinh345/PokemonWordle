@@ -12,7 +12,7 @@ export default function PokeSearch() {
   
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const {pokemonChoiceList} = usePokemon();
-  const {pokemonList, error} = useAllPokemon();
+  const {pokemonList, error, isReady} = useAllPokemon();
 
   const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
@@ -34,18 +34,23 @@ export default function PokeSearch() {
         className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
       />
 
-      {filteredPokemon.length > 0 && query !== "" && isFocused && (
-        <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto rounded-md bg-white shadow-lg border hide-scrollbar inset-shadow-sm inset-shadow-stone-500">
-          {filteredPokemon.map((pokemon) => (
-            <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
-          ))}
-          {matchingPokemon.length > 10 && (
-            <p className="text-sm text-gray-700 p-2 text-center italic">
-              Showing top 10 results. Refine your search to see more!
-            </p>
-          )}
-        </div>
-      )}
+      {isReady ? 
+        (filteredPokemon.length > 0 && query !== "" && isFocused && (
+          <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto rounded-md bg-white shadow-lg border hide-scrollbar inset-shadow-sm inset-shadow-stone-500">
+            {filteredPokemon.map((pokemon) => (
+              <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
+            ))}
+            {matchingPokemon.length > 10 && (
+              <p className="text-sm text-gray-700 p-2 text-center italic">
+                Showing top 10 results. Refine your search to see more!
+              </p>
+            )}
+          </div>
+        )
+      ) : (
+        <p className="text-sm text-gray-700 p-2 text-center italic">Loading...</p>
+      )
+      }
   </div>
   );
 

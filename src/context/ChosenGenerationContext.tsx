@@ -11,12 +11,13 @@ const ChosenGenerationContext = createContext<ChosenGenerationContextType | unde
 export const ChosenGenerationProvider = ({ children }: { children: ReactNode })=>{
     const [chosenGenerations, setChosenGenerations] = useState<number[]>([1])
     const updatedChosenGenerations = useCallback((genName: string, type: "add" | "remove") => {
+        console.log("updatechosen")
         const genNum = allGenerations[genName];
         if (genNum === undefined){
             return;
         }
         if(type === "add"){
-            setChosenGenerations([...chosenGenerations, genNum ])
+            setChosenGenerations(prev => ([...prev, genNum]))
         }else{
             if(chosenGenerations.length === 1){
                 throw new Error("Must have at least one Generation active!")

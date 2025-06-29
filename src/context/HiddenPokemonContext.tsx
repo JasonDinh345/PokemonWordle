@@ -3,6 +3,8 @@ import { Pokemon } from "@/components/pokemon/types";
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { useAllPokemon } from "./AllPokemonContext";
 
+
+
 type HiddenPokemonContextType = {
     hiddenPokemon : Pokemon | null
     resetHiddenPokemon : ()=> void
@@ -11,20 +13,22 @@ const HiddenPokemonContext = createContext<HiddenPokemonContextType | null>(null
 
 export const HiddenPokemonProvider = ({ children }: { children: ReactNode }) => {
     const [hiddenPokemon, setHiddenPokemon] = useState<Pokemon | null>(null);
+
     console.log(hiddenPokemon)
     const {getRandomPokemon, pokemonList} = useAllPokemon();
 
     const resetHiddenPokemon = useCallback(async()=>{
     
-        const pokemon: Pokemon = await getRandomPokemon();
-        setHiddenPokemon(pokemon)
+        if(pokemonList.length > 0){
+            const pokemon: Pokemon = await getRandomPokemon();
+            setHiddenPokemon(pokemon)
+        }
+        
     
-    },[getRandomPokemon])
+    },[getRandomPokemon, pokemonList])
     
     useEffect(()=>{
-        if(pokemonList.length > 0){
-            resetHiddenPokemon()
-        }
+        resetHiddenPokemon()
     },[resetHiddenPokemon, pokemonList])
     return (
         <HiddenPokemonContext.Provider value={{hiddenPokemon, resetHiddenPokemon}}>

@@ -4,7 +4,10 @@ import PokeWordle from "../../components/pokemon/PokeWordle";
 import { AllPokemonProvider } from "@/context/AllPokemonContext";
 import { HiddenPokemonProvider } from "@/context/HiddenPokemonContext";
 import { ChosenGenerationProvider } from "@/context/ChosenGenerationContext";
-import GenerationChooser from "@/components/pokemon/GenerationChooser";
+import GenerationChooser from "@/components/pokemon/GenerationChooser"; 
+import HintsBar from "@/components/pokemon/HintsBar"
+import VolumeControl from "@/components/VolumeControl";
+import { VolumeProvider } from "@/context/VolumeContext";
 
 
 export default function Game() {
@@ -14,12 +17,16 @@ export default function Game() {
       <AllPokemonProvider>
         <HiddenPokemonProvider>
           <PokemonChoiceProvider>
-            <div className="flex flex-col justify-center items-center">
-              <h1 className="text-5xl py-6 font-bold">Guess the Pokemon!</h1>
-              <GenerationChooser/>
-              <PokeSearch />
-              <PokeWordle/>
-            </div>
+            <VolumeProvider>
+              <div className="flex flex-col justify-center items-center relative">
+                <h1 className="text-5xl py-6 font-bold">Guess the Pokemon!</h1>
+                <VolumeControl/>
+                <GenerationChooser/>
+                <PokeSearch />
+                <HintsBar/>
+                <PokeWordle/>
+              </div>
+            </VolumeProvider>
           </PokemonChoiceProvider>
         </HiddenPokemonProvider>
       </AllPokemonProvider>

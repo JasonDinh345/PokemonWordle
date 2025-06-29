@@ -3,15 +3,14 @@ import { EvolvesTo, GenerationPokemon, Pokemon } from "@/components/pokemon/type
 export const getPokemon = async(name:string):Promise<Pokemon> =>{
     const fetchData = async ():Promise<Pokemon | undefined> => {
         try{
-            const [res1, res2] = await Promise.all([
-                fetch(`https://pokeapi.co/api/v2/pokemon-species/${name.toLowerCase()}`),
-                fetch((`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`))
-            ])
-            const data1 = await res1.json();
-            const data2 = await res2.json();
+            const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name.toLowerCase()}`);
+            const speciesData = await speciesRes.json();
+
+            const pokemonRes = await fetch(speciesData.varieties[0].pokemon.url);
+            const pokemonData = await pokemonRes.json();
             
-            const evoChainRes = fetch(data1.evolution_chain.url);
-            const typePromises = data2.types.map(async (type: {slot: number, type: { name: string, url: string }}) => {
+            const evoChainRes = fetch(speciesData.evolution_chain.url);
+            const typePromises = pokemonData.types.map(async (type: {slot: number, type: { name: string, url: string }}) => {
                 const res = await fetch(type.type.url);
                 const data = await res.json();
                 return data;
@@ -23,26 +22,27 @@ export const getPokemon = async(name:string):Promise<Pokemon> =>{
             ]);
             const evoData = await evoRes.json()
 
-            const canEvolve: boolean = determineCanEvolve(data1.name, evoData.chain)
-            const pokemonData: Pokemon = {
-                id: Number(data1.id), 
-                name: data1.name,
+            const canEvolve: boolean = determineCanEvolve(speciesData.name, evoData.chain)
+            const pokemon: Pokemon = {
+                id: Number(speciesData.id), 
+                name: speciesData.name,
                 color: {
-                name: data1.color.name
+                name: speciesData.color.name
                 },
                 generation: {
-                name : data1.generation.name.split("-")[1]
+                name : speciesData.generation.name.split("-")[1]
                 },
                 sprites: {
-                front_default: data2.sprites.front_default
+                front_default: pokemonData.sprites.front_default
                 },
                 types: typesData.map(type=>{
                 return {name: type.name, name_icon: type.sprites['generation-ix']["scarlet-violet"].name_icon }
                 }),
-                weight: data2.weight/10,
-                canEvolve: canEvolve
+                weight: pokemonData.weight/10,
+                canEvolve: canEvolve,
+                cry  : pokemonData.cries.latest
             }
-            return pokemonData
+            return pokemon
         }catch(err){
             console.log(err)
         }
@@ -53,14 +53,19 @@ export const getPokemon = async(name:string):Promise<Pokemon> =>{
     }
     throw new Error("Pokemon doesn't exist!" + name)
 }
-const determineCanEvolve = (name: string, evoChain: EvolvesTo)=>{
+const determineCanEvolve = (name: string, evoChain: EvolvesTo): boolean => {
+  if (evoChain.species.name === name) {
+    return evoChain.evolves_to.length > 0;
+  }
 
-    if(evoChain.species.name === name){
-        return evoChain.evolves_to.length !== 0
+  for (const evo of evoChain.evolves_to) {
+    if (determineCanEvolve(name, evo)) {
+      return true;
     }
-   
-    return determineCanEvolve(name, evoChain.evolves_to[0])
-}
+  }
+
+  return false;
+};
 export const getAllPokemonInGen = async(generationID: number):Promise<GenerationPokemon>=>{
     try{
         const generationRes = await fetch(`https://pokeapi.co/api/v2/generation/${generationID}/`)

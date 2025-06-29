@@ -7,7 +7,8 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 
 type PokemonContextType = {
   pokemonChoiceList: Pokemon[];
-  addChoice: (value: string) => void;
+  addChoice: (name: string) => void;
+  resetChoices: ()=> void
 };
 
 const PokemonChoiceContext = createContext<PokemonContextType | undefined>(undefined);
@@ -24,8 +25,11 @@ export const PokemonChoiceProvider = ({ children }: { children: ReactNode }) => 
         }
         
     }
+    const resetChoices = ()=>{
+      setPokemonChoiceList([])
+    }
     return (
-        <PokemonChoiceContext.Provider value={{ pokemonChoiceList, addChoice }}>
+        <PokemonChoiceContext.Provider value={{ pokemonChoiceList, addChoice, resetChoices }}>
         {children}
         </PokemonChoiceContext.Provider>
     );
