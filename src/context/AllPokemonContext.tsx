@@ -9,6 +9,7 @@ type AllPokemonContextType = {
     getRandomPokemon: () => Promise<Pokemon>;
     error: string | null
     isReady : boolean
+    setIsReady: (isReady:boolean)=>void
 }
 const AllPokemonContext = createContext<AllPokemonContextType | undefined>(undefined)
 
@@ -31,8 +32,7 @@ export const AllPokemonProvider = ({children}:{children: ReactNode}) =>{
 
     //do a is ready
     useEffect(() => {
-       
-        setIsReady(false)
+
         const fetchGens = async () => {
             for (const genID of chosenGenerations) {
                 if (!loadedGenerations.has(genID)) {
@@ -49,23 +49,30 @@ export const AllPokemonProvider = ({children}:{children: ReactNode}) =>{
                     }
                 }
             }
+            setIsReady(true)
         };
         
         fetchGens();
-        setIsReady(true)
+        
     }, [chosenGenerations, loadedGenerations]);
 
-    const pokemonList = useMemo((): SimpleData[] => 
-        chosenGenerations.flatMap(genID => allPokemonByGeneration[genID] || []),
-    [allPokemonByGeneration]);
+    const pokemonList = useMemo((): SimpleData[] => {
+        if (!isReady) {
+            return [];
+        }
+        return chosenGenerations.flatMap(genID => allPokemonByGeneration[genID] || []);
+    }, [chosenGenerations, allPokemonByGeneration, isReady]);
     //console.log(pokemonList)
     const getRandomPokemon = useCallback(async (): Promise<Pokemon> => {
+        if (pokemonList.length === 0) {
+            throw new Error("No Pokémon available to select.");
+        }   
         const name = pokemonList[Math.floor(Math.random() * pokemonList.length)].name;
         return await getPokemon(name);
     
     }, [pokemonList]);
     return(
-         <AllPokemonContext.Provider value={{pokemonList, getRandomPokemon, error, isReady }}>
+         <AllPokemonContext.Provider value={{pokemonList, getRandomPokemon, error, isReady, setIsReady }}>
             {children}
         </AllPokemonContext.Provider>
     )

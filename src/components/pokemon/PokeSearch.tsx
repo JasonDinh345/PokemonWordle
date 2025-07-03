@@ -2,21 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image'
-import { usePokemon } from '@/context/PokeChoiceContext';
+
 import { useAllPokemon } from '@/context/AllPokemonContext';
+import { Pokemon } from './types';
 
 
 
-export default function PokeSearch() {
+type PokeSearchProp = {
+  pokemonChoiceList: Pokemon[]
+  addChoiceAction: (name:string) => void
+}
+export default function PokeSearch({pokemonChoiceList, addChoiceAction}:PokeSearchProp) {
   const [query, setQuery] = useState("");
   
   const [isFocused, setIsFocused] = useState<boolean>(false)
-  const {pokemonChoiceList} = usePokemon();
+
   const {pokemonList, error, isReady} = useAllPokemon();
 
   const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
-
+  
   const filteredPokemon = matchingPokemon.slice(0, 10);
   if(error){
     return <p className="text-sm text-gray-700 p-2 text-center italic color-red">{error}</p>
@@ -56,7 +61,6 @@ export default function PokeSearch() {
 
   function PokeSuggestion({pokemon}:PokeSuggestionProp){
   const [pokemonData, setPokemonData] = useState<PokeSuggestionType | null>(null)
-  const {addChoice} = usePokemon();
   useEffect(()=>{
     const fetchData = async () => {
         const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name.toLowerCase()}`);
@@ -67,7 +71,7 @@ export default function PokeSearch() {
       fetchData();
   },[pokemon.name])
   const handleClick = ()=>{
-    addChoice(pokemon.name)
+    addChoiceAction(pokemon.name)
     setQuery("")
   }
     return(

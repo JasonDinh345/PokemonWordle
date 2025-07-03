@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react"
 
 import Image from 'next/image'
-import { usePokemon } from "@/context/PokeChoiceContext"
+
 import { Pokemon } from "./types";
 import { colorMap, PokemonColor } from "@/utils/colorMap";
 import { useHiddenPokemon } from "@/context/HiddenPokemonContext";
 import { comparePokemon, PokemonComparison } from "@/utils/comparePokemon";
-
-export default function PokeWordle(){
-    const {pokemonChoiceList} = usePokemon();
+type PokeWordleProps = {
+    pokemonChoiceList: Pokemon[]
+}
+export default function PokeWordle({pokemonChoiceList}:PokeWordleProps){
+    
     const [choices, setChoices] = useState<Pokemon[]>(pokemonChoiceList)
     const {hiddenPokemon} = useHiddenPokemon();
     useEffect(()=>{

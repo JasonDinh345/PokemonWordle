@@ -3,13 +3,16 @@ import { allGenerations } from "@/utils/allGenerations";
 import ButtonCheckBox from "../ButtonCheckBox";
 import { useMemo } from "react";
 import { useChosenGenerations } from "@/context/ChosenGenerationContext";
-import { usePokemon } from "@/context/PokeChoiceContext";
+import { useAllPokemon } from "@/context/AllPokemonContext";
 
 
-export default function GenerationChooser(){
+type GenerationChooserProp = {
+    resetChoicesAction: ()=>void
+}
+export default function GenerationChooser({resetChoicesAction}:GenerationChooserProp){
     const allGens = useMemo(()=>Object.keys(allGenerations),[])
     const {chosenGenerations, updatedChosenGenerations} = useChosenGenerations();
-    const {resetChoices} = usePokemon();
+    const {setIsReady} = useAllPokemon()
 
     const handleOnClick = (genName: string, checked: boolean)=>{
         if(checked){
@@ -17,7 +20,8 @@ export default function GenerationChooser(){
         }else{
             updatedChosenGenerations(genName, "remove")
         }
-        resetChoices()
+        setIsReady(false)
+        resetChoicesAction()
     }
     return(
         <>

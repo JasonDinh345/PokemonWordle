@@ -1,10 +1,18 @@
 'use client'; 
 import { useState } from "react"
 import Image from 'next/image'
-import { useVolume } from "@/context/VolumeContext";
-export default function VolumeControl(){
+
+type VolumeContextProps = {
+    volume: number
+    setVolumeAction: (value: number)=>  void
+}
+export default function VolumeControl({volume, setVolumeAction}:VolumeContextProps){
     const [isHovered, setIsHovered] = useState(false)
-    const {volume, adjustVolume} = useVolume();
+    const adjustVolume = (volume: number) =>{
+        if(volume >= 0 && volume <= 100){
+            setVolumeAction(volume)
+        }
+    }
     return(
         <>
         <div onMouseEnter={()=>{setIsHovered(true)}} onMouseLeave={()=>{setIsHovered(false)}} className="absolute top-0 right-0 mr-10 mt-2 w-25 h-fit flex flex-col items-center justify-center">

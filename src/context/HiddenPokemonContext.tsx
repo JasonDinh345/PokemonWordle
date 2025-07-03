@@ -1,37 +1,42 @@
 "use client"
 import { Pokemon } from "@/components/pokemon/types";
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useAllPokemon } from "./AllPokemonContext";
+
 
 
 
 type HiddenPokemonContextType = {
     hiddenPokemon : Pokemon | null
-    resetHiddenPokemon : ()=> void
+
 }
 const HiddenPokemonContext = createContext<HiddenPokemonContextType | null>(null);
 
 export const HiddenPokemonProvider = ({ children }: { children: ReactNode }) => {
     const [hiddenPokemon, setHiddenPokemon] = useState<Pokemon | null>(null);
 
-    console.log(hiddenPokemon)
-    const {getRandomPokemon, pokemonList} = useAllPokemon();
+    
+    const {getRandomPokemon, pokemonList, isReady} = useAllPokemon();
 
-    const resetHiddenPokemon = useCallback(async()=>{
+   
+
+useEffect(() => {
+
+  if (isReady && pokemonList.length > 0) {
+    (async () => {
+      
+     
+      const pokemon = await getRandomPokemon();
     
-        if(pokemonList.length > 0){
-            const pokemon: Pokemon = await getRandomPokemon();
-            setHiddenPokemon(pokemon)
-        }
-        
-    
-    },[getRandomPokemon, pokemonList])
-    
-    useEffect(()=>{
-        resetHiddenPokemon()
-    },[resetHiddenPokemon, pokemonList])
+      
+      setHiddenPokemon(pokemon);
+    })();
+  }
+}, [isReady, pokemonList, getRandomPokemon]);
+
+
     return (
-        <HiddenPokemonContext.Provider value={{hiddenPokemon, resetHiddenPokemon}}>
+        <HiddenPokemonContext.Provider value={{hiddenPokemon}}>
             {children}
         </HiddenPokemonContext.Provider>
     );
