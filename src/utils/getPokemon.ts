@@ -1,4 +1,4 @@
-import { EvolvesTo, GenerationPokemon, Pokemon } from "@/components/pokemon/types";
+import { DexEntry, Entry, EvolvesTo, GenerationPokemon, Pokemon } from "@/components/pokemon/types";
 
 export const getPokemon = async(name:string):Promise<Pokemon> =>{
     const fetchData = async ():Promise<Pokemon | undefined> => {
@@ -79,4 +79,25 @@ export const getAllPokemonInGen = async(generationID: number):Promise<Generation
         console.log(err)
     }
     throw new Error("Generation doesn't exist!")
+}
+export const getEntry = async(id:number):Promise<DexEntry> =>{
+    try{
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}/`)
+        const data = await res.json()
+        const entries = data.flavor_text_entries.filter((entry:Entry) =>
+            entry.language.name === "en"
+        )
+      
+        const random = Math.floor(Math.random() * entries.length);
+   
+        
+        return {
+            game: entries[random].version.name,
+            entry: entries[random].flavor_text
+
+        } as DexEntry
+    }catch(err){
+        console.log(err)
+    }
+    throw new Error("Pokemon doesn't exist!")
 }

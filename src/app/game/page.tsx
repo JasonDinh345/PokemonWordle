@@ -42,7 +42,7 @@ export default function Game() {
             <h1 className="text-5xl py-6 font-bold">Guess the Pokemon!</h1>
             <GenerationChooser resetChoicesAction={resetChoices}/>
             <PokeSearch pokemonChoiceList={pokemonChoiceList} addChoiceAction={addChoice}/>
-            <HintsBar volume={volume}/>
+            <HintsBar volume={volume} numGuesses={pokemonChoiceList.length || 0}/>
             <PokeWordle pokemonChoiceList={pokemonChoiceList}/>
           </div>
             

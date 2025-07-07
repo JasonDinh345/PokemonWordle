@@ -78,7 +78,7 @@ export default function PokeSearch({pokemonChoiceList, addChoiceAction}:PokeSear
         pokemonData  && (
           <div className="flex items-center justify-between px-4 py-2 hover:bg-red-100 cursor-pointer border-b-2 border-stone-200" onMouseDown={handleClick}>
             <h2 className="capitalize">{pokemon.name}</h2>
-            <Image src={pokemonData.sprites.front_default} width={40} height={40} alt={pokemon.name} />
+            <Image src={pokemonData.sprites.front_default} width={50} height={50} alt={pokemon.name} />
           </div>
         )
        

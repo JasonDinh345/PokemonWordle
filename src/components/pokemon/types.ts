@@ -34,3 +34,13 @@ export type GenerationPokemon = {
     pokemon_species : SimpleData[]
 }
 export type SimpleData =  {name: string, url: string}
+
+export type DexEntry = {
+    game: string
+    entry: string
+}
+export type Entry = {
+    flavor_text: string
+    language: SimpleData
+    version : SimpleData
+}

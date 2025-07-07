@@ -19,7 +19,7 @@ export default function PokeWordle({pokemonChoiceList}:PokeWordleProps){
         setChoices(pokemonChoiceList)
     },[pokemonChoiceList])
     return(
-        <table className="my-4">
+        <table className="">
             <thead>
 
                 <tr>
