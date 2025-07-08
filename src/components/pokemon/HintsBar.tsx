@@ -67,7 +67,22 @@ function DexEntryHint() {
     </div>
     <Popup isShown={isShown} setIsShownAction={setIsShown}>
       {entry ? 
-        <p>{entry.entry}</p>
+       <div className="border-2 border-stone-400 rounded-md overflow-hidden">
+         <table className="border-separate border-spacing-0">
+          <thead>
+            <tr >
+              <th className="border-2 border-stone-400 px-4 py-2 ">Game Version</th>
+              <th className="border-2 border-stone-400 px-4 py-2">Entry</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="capitalize border-2 border-stone-400 px-4 py-2 text-center">{entry.game}</td>
+              <td className="border-2 border-stone-400 px-4 py-2">{entry.entry}</td>
+            </tr>
+          </tbody>
+        </table>
+       </div>
         :
         <p>Loading...</p>
       }
