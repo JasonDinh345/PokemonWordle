@@ -25,6 +25,9 @@ export default function HintsBar({volume, numGuesses}:HintsBarProps) {
               <HintBox minGuesses={5} currentNum={numGuesses} hint="Dex Entry"icon="/pokedex.svg">
                 <DexEntryHint />
               </HintBox>
+              <HintBox minGuesses={8} currentNum={numGuesses} hint="Shadow Sprite"icon="/pokeball.svg">
+                <SpriteHint />
+              </HintBox>
             </div>
         )}
         </>
@@ -90,4 +93,24 @@ function DexEntryHint() {
     </>
 
   );
+}
+function SpriteHint(){
+  const [isShown, setIsShown] = useState<boolean>(false)
+  const { hiddenPokemon } = useHiddenPokemon();
+ 
+  return(
+    <>
+    <div className="flex items-center justify-center size-full flex-col" onClick={()=>setIsShown(true)}>
+       <Image className="" width={24} height={24} src="/pokeball.svg" alt="Click to see the shadow sprite!"/>
+       <p className="text-xs">Shadow Sprite</p>
+    </div>
+    {isShown && (
+      <Popup isShown={isShown} setIsShownAction={setIsShown}>
+      {hiddenPokemon && (
+        <Image  className="filter brightness-0"src={hiddenPokemon?.sprites.front_default} width={100} height={100}alt="Hidden Pokemon Sprite"></Image>
+      )}
+    </Popup>
+    )}
+    </>
+  )
 }
