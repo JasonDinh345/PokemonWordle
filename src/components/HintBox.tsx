@@ -11,7 +11,7 @@ export default function HintBox({minGuesses, currentNum, icon, hint, children}: 
     
     return(
         <>
-        <div className="w-32 h-16 border-2 border-stone-400 rounded-2xl overflow-hidden ">
+        <div className={`w-32 h-16 border-2 border-stone-800 rounded-2xl overflow-hidden shadow-[4px_5px_3px_gray] ${minGuesses < currentNum && `cursor-pointer`}`}>
             {minGuesses > currentNum ? (
                 <>
                 <div className=" size-full bg-red-300 p-1 flex flex-col justify-center items-center">

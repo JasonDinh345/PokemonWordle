@@ -10,7 +10,7 @@ import HintsBar from "@/components/pokemon/HintsBar"
 
 
 import { Pokemon } from "@/components/pokemon/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPokemon } from "@/utils/getPokemon";
 import VolumeControl from "@/components/VolumeControl";
 
@@ -18,6 +18,8 @@ import VolumeControl from "@/components/VolumeControl";
 export default function Game() {
   const [pokemonChoiceList, setPokemonChoiceList] = useState<Pokemon[]>([]);
   const [volume, setVolume] = useState<number>(25)
+  const [isGameOver, setIsGameOver]= useState<boolean>(false)
+
   const addChoice = async(name:string)=>{
           
     const result = await getPokemon(name);
@@ -28,6 +30,7 @@ export default function Game() {
     }
           
   }
+
   const resetChoices = ()=>{
     setPokemonChoiceList([])
   }

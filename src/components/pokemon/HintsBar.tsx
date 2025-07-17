@@ -55,7 +55,12 @@ function DexEntryHint() {
   const handleOnClick = async() =>{
    
     if(!entry && hiddenPokemon){
-      setEntry(await getEntry(hiddenPokemon.id))
+      const dex: DexEntry = await getEntry(hiddenPokemon.id)
+      if(dex.entry.toLowerCase().includes(hiddenPokemon.name.toLowerCase())){
+        const regex = new RegExp(hiddenPokemon.name, "gi")
+        dex.entry = dex.entry.replace(regex, "[REDACTED]")
+      }
+      setEntry(dex)
 
     }
   

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+
 
 import Image from 'next/image'
 
@@ -8,17 +8,25 @@ import { Pokemon } from "./types";
 import { colorMap, PokemonColor } from "@/utils/colorMap";
 import { useHiddenPokemon } from "@/context/HiddenPokemonContext";
 import { comparePokemon, PokemonComparison } from "@/utils/comparePokemon";
+import { useEffect, useState } from 'react';
+import Popup from '../Popup';
+
 type PokeWordleProps = {
     pokemonChoiceList: Pokemon[]
 }
 export default function PokeWordle({pokemonChoiceList}:PokeWordleProps){
     
-    const [choices, setChoices] = useState<Pokemon[]>(pokemonChoiceList)
+    
     const {hiddenPokemon} = useHiddenPokemon();
+    const [isGameOver, setIsGameOver] = useState<boolean>(false)
     useEffect(()=>{
-        setChoices(pokemonChoiceList)
-    },[pokemonChoiceList])
+        if(pokemonChoiceList.some(pokemon =>
+            pokemon.name === hiddenPokemon?.name)){
+                setIsGameOver(true)
+            }
+    },[hiddenPokemon, pokemonChoiceList])
     return(
+        <>
         <table className="">
             <thead>
 
@@ -29,11 +37,23 @@ export default function PokeWordle({pokemonChoiceList}:PokeWordleProps){
                 </tr>
             </thead>
             <tbody>
-                {choices.map(choice =>
+                {pokemonChoiceList.map(choice =>
                 <PokeChoiceContianer pokemon={choice} key={choice.name}/>
             )}
             </tbody>
         </table>
+        {isGameOver && (
+            <Popup isShown={isGameOver} setIsShownAction={()=>setIsGameOver(false)}>
+                {hiddenPokemon && (
+                    <div className='flex flex-col justify-center items-center'>
+                        <h1 className='font-bold'>Successfully guessed <span className='capitalize'>{hiddenPokemon.name}</span> in {pokemonChoiceList.length} guesses!</h1>
+                        <Image src={hiddenPokemon.sprites.front_default} width={200} height={200} alt={hiddenPokemon.name} />
+                        <button>Play Again</button>
+                    </div>
+                )}
+            </Popup>
+        )}
+        </>
     )
     function PokeChoiceContianer({pokemon}:PokeChoiceProp){
     const correctness: PokemonComparison = comparePokemon(pokemon, hiddenPokemon!)
