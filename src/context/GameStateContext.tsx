@@ -2,7 +2,7 @@
 import { Pokemon } from "@/components/pokemon/types";
 import { getPokemon } from "@/utils/getPokemon";
 
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type GameStateContextProps = {
     pokemonChoiceList: Pokemon[]
@@ -40,4 +40,12 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
             {children}
         </GameStateContext.Provider>
       )
+}
+
+export function useGameState(){
+    const context = useContext(GameStateContext)
+    if(!context){
+        throw new Error("Must use useGameState in a GameStateProvider")
+    }
+    return context
 }

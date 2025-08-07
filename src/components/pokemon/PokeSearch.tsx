@@ -4,21 +4,19 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image'
 
 import { useAllPokemon } from '@/context/AllPokemonContext';
-import { Pokemon } from './types';
+import { useGameState } from '@/context/GameStateContext';
 
 
 
-type PokeSearchProp = {
-  pokemonChoiceList: Pokemon[]
-  addChoiceAction: (name:string) => void
-}
-export default function PokeSearch({pokemonChoiceList, addChoiceAction}:PokeSearchProp) {
+
+
+export default function PokeSearch() {
   const [query, setQuery] = useState("");
   
   const [isFocused, setIsFocused] = useState<boolean>(false)
 
   const {pokemonList, error, isReady} = useAllPokemon();
-
+  const {pokemonChoiceList, addChoice} = useGameState();
   const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
   
@@ -71,7 +69,7 @@ export default function PokeSearch({pokemonChoiceList, addChoiceAction}:PokeSear
       fetchData();
   },[pokemon.name])
   const handleClick = ()=>{
-    addChoiceAction(pokemon.name)
+    addChoice(pokemon.name)
     setQuery("")
   }
     return(

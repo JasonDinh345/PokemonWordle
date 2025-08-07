@@ -10,12 +10,11 @@ import { useHiddenPokemon } from "@/context/HiddenPokemonContext";
 import { comparePokemon, PokemonComparison } from "@/utils/comparePokemon";
 import { useEffect, useState } from 'react';
 import Popup from '../Popup';
+import { useGameState } from '@/context/GameStateContext';
 
-type PokeWordleProps = {
-    pokemonChoiceList: Pokemon[]
-}
-export default function PokeWordle({pokemonChoiceList}:PokeWordleProps){
-    
+
+export default function PokeWordle(){
+    const {pokemonChoiceList} = useGameState();
     
     const {hiddenPokemon} = useHiddenPokemon();
     const [isGameOver, setIsGameOver] = useState<boolean>(false)

@@ -4,17 +4,20 @@ import { useHiddenPokemon } from "@/context/HiddenPokemonContext";
 import { playCry } from "@/utils/playCry";
 import HintBox from "../HintBox";
 import Image from 'next/image'
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Popup from "../Popup";
 import { DexEntry } from "./types";
 import { getEntry } from "@/utils/getPokemon";
-type HintsBarProps = {
-  volume: number
-  numGuesses:number
-}
-export default function HintsBar({volume, numGuesses}:HintsBarProps) {
+import { useGameState } from "@/context/GameStateContext";
+
+export default function HintsBar() {
 
     const { hiddenPokemon } = useHiddenPokemon();
+    const {volume, pokemonChoiceList} = useGameState()
+
+    const numGuesses = useMemo(()=>
+      pokemonChoiceList.length
+    ,[pokemonChoiceList]) 
     return (
         <>
         {hiddenPokemon && (
