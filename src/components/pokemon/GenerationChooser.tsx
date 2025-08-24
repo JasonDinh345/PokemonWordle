@@ -9,7 +9,7 @@ import { useGameState } from "@/context/GameStateContext";
 
 
 export default function GenerationChooser(){
-    const {resetChoices} = useGameState();
+    const {resetGame} = useGameState();
     const allGens = useMemo(()=>Object.keys(allGenerations),[])
     const {chosenGenerations, updatedChosenGenerations} = useChosenGenerations();
     const {setIsReady} = useAllPokemon()
@@ -21,7 +21,7 @@ export default function GenerationChooser(){
             updatedChosenGenerations(genName, "remove")
         }
         setIsReady(false)
-        resetChoices()
+        resetGame()
     }
     return(
         <>

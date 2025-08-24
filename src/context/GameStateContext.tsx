@@ -9,6 +9,7 @@ type GameStateContextProps = {
     pokemonChoiceList: Pokemon[]
     volume: number
     hiddenPokemon: Pokemon | null
+    isLoading: boolean
     setVolume: (number: number)=>  void
     isGameOver: boolean
     setIsGameOver: (isGameOver: boolean)=> void
@@ -19,42 +20,40 @@ const GameStateContext = createContext<GameStateContextProps| undefined>(undefin
 
 export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   const [hiddenPokemon, setHiddenPokemon] = useState<Pokemon | null>(null);
-  
-      
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [pokemonChoiceList, setPokemonChoiceList] = useState<Pokemon[]>([])
+  const [volume, setVolume] = useState<number>(25)
+  const [isGameOver, setIsGameOver]= useState<boolean>(false)    
   const {getRandomPokemon, pokemonList} = useAllPokemon();
   console.log(hiddenPokemon)
    useEffect(() => {
    
-     if (pokemonList.length > 0) {
+     if (pokemonList.length > 0 && isGameOver === false) {
        (async () => {
          const pokemon = await getRandomPokemon();
          setHiddenPokemon(pokemon);
        })();
      }
-   }, [pokemonList, getRandomPokemon]);
+   }, [pokemonList, getRandomPokemon, isGameOver]);
     const addChoice = async(name:string)=>{
-              
+        setIsLoading(true)      
         const result = await getPokemon(name);
         if(result){
           const newChoice = result as Pokemon
           const updatedList:Pokemon[] = [...pokemonChoiceList, newChoice]
           setPokemonChoiceList(updatedList)
         }
-              
+        setIsLoading(false)          
       }
     const resetGame = async() =>{
-      const pokemon = await getRandomPokemon();
-      setHiddenPokemon(pokemon);
       setPokemonChoiceList([])
       setIsGameOver(false)
     }
-    const [pokemonChoiceList, setPokemonChoiceList] = useState<Pokemon[]>([])
-    const [volume, setVolume] = useState<number>(25)
-    const [isGameOver, setIsGameOver]= useState<boolean>(false)
+    
     
     
       return (
-        <GameStateContext.Provider value={{pokemonChoiceList, volume, isGameOver,setVolume, setIsGameOver, addChoice, resetGame, hiddenPokemon}}>
+        <GameStateContext.Provider value={{pokemonChoiceList, volume, isGameOver,setVolume, setIsGameOver, addChoice, resetGame, hiddenPokemon, isLoading}}>
             {children}
         </GameStateContext.Provider>
       )

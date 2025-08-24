@@ -17,7 +17,7 @@ import Popup from '../Popup';
 export default function PokeWordle(){
     const {pokemonChoiceList} = useGameState();
     const [popUpVisible, setPopUpVisible] = useState<boolean>(false)
-    const {isGameOver, setIsGameOver, resetGame, hiddenPokemon} = useGameState();
+    const {isGameOver, setIsGameOver, resetGame, hiddenPokemon, isLoading} = useGameState();
     useEffect(()=>{
         if(pokemonChoiceList.some(pokemon =>
             pokemon.name === hiddenPokemon?.name)){
@@ -62,8 +62,21 @@ export default function PokeWordle(){
             </thead>
             <tbody>
                 {pokemonChoiceList.map(choice =>
-                <PokeChoiceContianer pokemon={choice} key={choice.name}/>
-            )}
+                    <PokeChoiceContianer pokemon={choice} key={choice.name}/>
+                )}
+                {isLoading &&
+                    <tr className="items-center justify-between px-4 py-2 bg-stone-200 border-b-2 border-stone-200">
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                      <td className='h-[60px]'></td>
+                    </tr>    
+                }
             </tbody>
         </table>
         

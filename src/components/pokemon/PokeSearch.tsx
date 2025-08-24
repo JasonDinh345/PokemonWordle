@@ -26,19 +26,20 @@ export default function PokeSearch() {
   }
   
   return (
-    <div className="relative w-full max-w-sm">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={()=>setIsFocused(true)}
-        onBlur={()=>setIsFocused(false)}
-        placeholder="Enter a Pokémon name"
-        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
-      />
+  <div className="relative w-full max-w-sm">
+    {isReady ? (
+      <>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder="Enter a Pokémon name"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
+        />
 
-      {isReady ? 
-        (filteredPokemon.length > 0 && query !== "" && isFocused && (
+        {filteredPokemon.length > 0 && query !== "" && isFocused && (
           <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto rounded-md bg-white shadow-lg border hide-scrollbar inset-shadow-sm inset-shadow-stone-500">
             {filteredPokemon.map((pokemon) => (
               <PokeSuggestion pokemon={pokemon} key={pokemon.name} />
@@ -49,13 +50,15 @@ export default function PokeSearch() {
               </p>
             )}
           </div>
-        )
-      ) : (
-        <p className="text-sm text-gray-700 p-2 text-center italic">Loading...</p>
-      )
-      }
+        )}
+      </>
+    ) : (
+      <div className="p-4 text-center text-gray-700 italic">
+        Loading Pokémon data...
+      </div>
+    )}
   </div>
-  );
+);
 
   function PokeSuggestion({pokemon}:PokeSuggestionProp){
   const [pokemonData, setPokemonData] = useState<PokeSuggestionType | null>(null)
