@@ -1,5 +1,5 @@
 'use client';
-import { useHiddenPokemon } from "@/context/HiddenPokemonContext";
+
 
 import { playCry } from "@/utils/playCry";
 import HintBox from "../HintBox";
@@ -12,7 +12,7 @@ import { useGameState } from "@/context/GameStateContext";
 
 export default function HintsBar() {
 
-    const { hiddenPokemon } = useHiddenPokemon();
+    const { hiddenPokemon } = useGameState();
     const {volume, pokemonChoiceList} = useGameState()
 
     const numGuesses = useMemo(()=>
@@ -53,8 +53,7 @@ function PokeCryHint({cry, volume}:PokeCryHintProp) {
 function DexEntryHint() {
   const [entry, setEntry] = useState<DexEntry>()
   const [isShown, setIsShown] = useState<boolean>(false)
-  const { hiddenPokemon } = useHiddenPokemon();
-  console.log(hiddenPokemon)
+  const { hiddenPokemon } = useGameState();
   const handleOnClick = async() =>{
    
     if(!entry && hiddenPokemon){
@@ -104,7 +103,7 @@ function DexEntryHint() {
 }
 function SpriteHint(){
   const [isShown, setIsShown] = useState<boolean>(false)
-  const { hiddenPokemon } = useHiddenPokemon();
+  const { hiddenPokemon } = useGameState();
  
   return(
     <>

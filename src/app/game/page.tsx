@@ -3,7 +3,6 @@
 import PokeSearch from "../../components/pokemon/PokeSearch";
 import PokeWordle from "../../components/pokemon/PokeWordle";
 import { AllPokemonProvider } from "@/context/AllPokemonContext";
-import { HiddenPokemonProvider } from "@/context/HiddenPokemonContext";
 import { ChosenGenerationProvider } from "@/context/ChosenGenerationContext";
 import GenerationChooser from "@/components/pokemon/GenerationChooser"; 
 import HintsBar from "@/components/pokemon/HintsBar"
@@ -24,7 +23,7 @@ export default function Game() {
     <ChosenGenerationProvider>
       <AllPokemonProvider>
         <GameStateProvider>
-          <HiddenPokemonProvider>
+          
          
           <div className="flex flex-col justify-center items-center relative">
             
@@ -36,7 +35,7 @@ export default function Game() {
           </div>
             
           
-          </HiddenPokemonProvider>
+          
         </GameStateProvider>
       </AllPokemonProvider>
     </ChosenGenerationProvider>

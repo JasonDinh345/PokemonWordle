@@ -6,27 +6,52 @@ import Image from 'next/image'
 
 import { Pokemon } from "./types";
 import { colorMap, PokemonColor } from "@/utils/colorMap";
-import { useHiddenPokemon } from "@/context/HiddenPokemonContext";
+
 import { comparePokemon, PokemonComparison } from "@/utils/comparePokemon";
 import { useEffect, useState } from 'react';
-import Popup from '../Popup';
+
 import { useGameState } from '@/context/GameStateContext';
+import Popup from '../Popup';
 
 
 export default function PokeWordle(){
     const {pokemonChoiceList} = useGameState();
-    
-    const {hiddenPokemon} = useHiddenPokemon();
-    const [isGameOver, setIsGameOver] = useState<boolean>(false)
+    const [popUpVisible, setPopUpVisible] = useState<boolean>(false)
+    const {isGameOver, setIsGameOver, resetGame, hiddenPokemon} = useGameState();
     useEffect(()=>{
         if(pokemonChoiceList.some(pokemon =>
             pokemon.name === hiddenPokemon?.name)){
                 setIsGameOver(true)
+                
             }
-    },[hiddenPokemon, pokemonChoiceList])
+    },[hiddenPokemon, pokemonChoiceList, setIsGameOver])
+    useEffect(()=>{
+        if(isGameOver){
+            setPopUpVisible(true)
+        }
+    },[isGameOver])
     return(
         <>
-        <table className="">
+        {isGameOver && (
+            <>
+            <Popup isShown={popUpVisible} setIsShownAction={setPopUpVisible}>
+                {hiddenPokemon && (
+                    <div className='flex flex-col justify-center items-center'>
+                        <h1 className='font-bold'>Successfully guessed <span className='capitalize'>{hiddenPokemon.name}</span> in {pokemonChoiceList.length} guesses!</h1>
+                        <Image src={hiddenPokemon.sprites.front_default} width={200} height={200} alt={hiddenPokemon.name} />
+                        <button onClick={resetGame}>Play Again</button>
+                    </div>
+                )}
+            </Popup>
+            <button 
+            className={`w-64 h-16 border-2 border-stone-800 rounded-2xl overflow-hidden shadow-[4px_5px_3px_gray] font-bold cursor-pointer my-2` }
+            onClick={resetGame}
+            >
+                Play Again
+            </button>
+            </>
+        )}
+        <table className="mb-4">
             <thead>
 
                 <tr>
@@ -41,17 +66,7 @@ export default function PokeWordle(){
             )}
             </tbody>
         </table>
-        {isGameOver && (
-            <Popup isShown={isGameOver} setIsShownAction={()=>setIsGameOver(false)}>
-                {hiddenPokemon && (
-                    <div className='flex flex-col justify-center items-center'>
-                        <h1 className='font-bold'>Successfully guessed <span className='capitalize'>{hiddenPokemon.name}</span> in {pokemonChoiceList.length} guesses!</h1>
-                        <Image src={hiddenPokemon.sprites.front_default} width={200} height={200} alt={hiddenPokemon.name} />
-                        <button>Play Again</button>
-                    </div>
-                )}
-            </Popup>
-        )}
+        
         </>
     )
     function PokeChoiceContianer({pokemon}:PokeChoiceProp){
