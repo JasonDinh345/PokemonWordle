@@ -21,7 +21,7 @@ export default function SplitBannerChild({icon, alt, children}:SplitBannerChildP
             onMouseLeave={()=>setIsHovered(false)}
         >
             <Image width={100} height={100} src={icon} alt={alt}></Image>
-            <p className={`text-center font-bold duration-300 ease-in-out ${!isHovered ? "max-h-0 opacity-0 p-4" : "h-fit opacity-100 px-4"}`}>{children}</p>
+            <p className={`text-center font-bold duration-300 ease-in-out px-4 ${!isHovered ? "max-h-0 opacity-0 py-1" : "h-fit opacity-100 "}`}>{children}</p>
         </div>
         </>
     )
