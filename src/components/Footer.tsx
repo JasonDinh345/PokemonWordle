@@ -8,7 +8,7 @@ export default function Footer(){
         <footer className="w-full h-12 bg-stone-600 flex justify-center items-center">
             <p className="text-white cursor-pointer">
                 <span onClick={()=>setVisible(true)}>How to Play</span> |  
-                <a href="https://github.com/JasonDinh345" target="_blank" rel="noopener noreferrer"> GitHub</a></p>
+                <a href="https://github.com/JasonDinh345/PokemonWordle" target="_blank" rel="noopener noreferrer"> GitHub</a></p>
             {visible && 
                 <Popup isShown={visible} setIsShownAction={setVisible}>
                     <div className="flex flex-col gap-2">
