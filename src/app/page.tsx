@@ -5,7 +5,7 @@ import SplitBannerChild from "@/components/SplitBannerChild";
 
 export default function Home() {
   return (
-    <div className="w-full h-fit">
+    <div className="w-full h-fit flex flex-col">
       <MainBanner/>
       <SplitBanner className="border-y-4 border-black">
         <SplitBannerChild icon="/mono_pokeball.svg" alt="pokeball">
@@ -19,8 +19,8 @@ export default function Home() {
         </SplitBannerChild>
       </SplitBanner>
       <FullBanner>
-        <h1 className="text-4xl font-bold mb-4">Test Your Pokemon Knowledge!</h1>
-        <p className="indent-8 text-xl px-32 text-center">
+        <h1 className="text-2xl font-bold mb-4 lg:text-4xl">Test Your Pokemon Knowledge!</h1>
+        <p className="indent-8 text-md text-center lg:px-32 lg:text-xl">
           Pokédle, a Pokémon themed guessing game inspired by Wordle, tests if you can uncover the hidden chosen Pokémon. Like Wordle, as you continue to guess, based on your guessed 
           Pokémon, hints will be given out to help you to the correct Pokémon! Additionally, series of hints will be available if you choose to use them, gradually becoming more 
           helpful! 

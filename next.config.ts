@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
- images: {
+  images: {
     remotePatterns: [
       {
         protocol: 'https',
@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: [
+    'http://10.0.0.202:3000', // LAN IP for your phone
+    'http://localhost:3000',  // optional for desktop
+  ],
 };
 
 export default nextConfig;
