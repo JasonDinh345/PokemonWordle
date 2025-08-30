@@ -22,7 +22,7 @@ export const ChosenGenerationProvider = ({ children }: { children: ReactNode })=
             setChosenGenerations(prev => ([...prev, genNum]))
         }else{
             if(chosenGenerations.length === 1){
-                throw new Error("Must have at least one Generation active!")
+                window.alert("Must have at least one generation active!")
             }
             const updatedList = chosenGenerations.filter(gen =>
             gen !== genNum

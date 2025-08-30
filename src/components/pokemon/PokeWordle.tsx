@@ -51,7 +51,8 @@ export default function PokeWordle(){
             </button>
             </>
         )}
-        <table className="mb-4">
+        <div className='w-screen overflow-auto flex lg:justify-center lg:items-center'>
+             <table className="mb-4 ">
             <thead>
 
                 <tr>
@@ -80,6 +81,7 @@ export default function PokeWordle(){
             </tbody>
         </table>
         
+        </div>
         </>
     )
     function PokeChoiceContianer({pokemon}:PokeChoiceProp){

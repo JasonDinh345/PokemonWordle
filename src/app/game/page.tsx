@@ -27,7 +27,7 @@ export default function Game() {
          
           <div className="flex flex-col justify-center items-center relative">
             
-            <h1 className="text-5xl py-6 font-bold">Guess the Pokemon!</h1>
+            <h1 className="text-5xl py-6 font-bold text-center">Pokédle</h1>
             <GenerationChooser/>
             <PokeSearch/>
             <HintsBar/>

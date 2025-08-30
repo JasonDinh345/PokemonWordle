@@ -25,7 +25,7 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
   const [volume, setVolume] = useState<number>(25)
   const [isGameOver, setIsGameOver]= useState<boolean>(false)    
   const {getRandomPokemon, pokemonList} = useAllPokemon();
-  console.log(hiddenPokemon)
+
    useEffect(() => {
    
      if (pokemonList.length > 0 && isGameOver === false) {

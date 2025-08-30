@@ -25,8 +25,8 @@ export default function GenerationChooser(){
     }
     return(
         <>
-        <h1 className="text-xl py-6 ">Choose Which Generation to Include!</h1>
-        <div className="flex flex-row gap-2 pb-6">
+        <h1 className="text-xl py-6 text-center">Choose Which Generation to Include!</h1>
+        <div className="flex flex-row gap-2 pb-6 overflow-auto w-screen items-start justify-start lg:justify-center px-2">
             {allGens.map(genName =>
                 <ButtonCheckBox onClickAction={(checked:boolean)=>handleOnClick(genName, checked)} key={genName} label={genName} isChecked={chosenGenerations.includes(allGenerations[genName])}/>
             )}

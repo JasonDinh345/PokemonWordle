@@ -13,6 +13,6 @@ export default function ButtonCheckBox({onClickAction, label, isChecked}:ButtonC
         onClickAction(!isChecked)
     }
     return(
-        <button className={`px-2 py-4 cursor-pointer border-black border-2 rounded-4xl w-30  ${isChecked ? "bg-red-300 font-bold shadow-[4px_5px_3px_gray]": "bg-stone-400"} transition-all ease-in-out duration-150`} onClick={handleOnClick}>{label}</button>
+        <button className={`px-2 py-4 cursor-pointer border-black border-2 rounded-4xl min-w-[100px] lg:w-30  ${isChecked ? "bg-red-300 font-bold shadow-[4px_5px_3px_gray]": "bg-stone-400"} transition-all ease-in-out duration-150`} onClick={handleOnClick}>{label}</button>
     )
 }

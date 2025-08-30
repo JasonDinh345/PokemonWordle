@@ -62,7 +62,6 @@ export const AllPokemonProvider = ({children}:{children: ReactNode}) =>{
         }
         return chosenGenerations.flatMap(genID => allPokemonByGeneration[genID] || []);
     }, [chosenGenerations, allPokemonByGeneration, isReady]);
-    //console.log(pokemonList)
     const getRandomPokemon = useCallback(async (): Promise<Pokemon> => {
         if (pokemonList.length === 0) {
             throw new Error("No Pokémon available to select.");
