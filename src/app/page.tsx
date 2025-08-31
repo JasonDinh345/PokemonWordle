@@ -12,7 +12,7 @@ export default function Home() {
           Include Pokémon from Kanto to Paldea! Choose from one to multiple regions!
         </SplitBannerChild>
         <SplitBannerChild icon="/hint.svg" alt="hint">
-          Have unlimited attempts to guess the hidden Pokémon! As you guess, the Pokémon will be revealed!
+          Have unlimited attempts to guess the hidden Pokémon!
         </SplitBannerChild>
         <SplitBannerChild icon="/api.svg" alt="API">
           All data is supplied by the free open-source RESTful API, <a href="https://pokeapi.co/" className="underline text-red-400">PokéAPI</a>
