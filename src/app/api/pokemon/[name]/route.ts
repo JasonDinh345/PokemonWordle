@@ -4,10 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { name: string } }
+  context: { params: Promise<{ name: string }> }
 ) {
+ 
+  const { name } = await context.params;
   try {
-    const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${params.name.toLowerCase()}`);
+    const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name.toLowerCase()}`);
 
     if (!speciesRes.ok) {
       return NextResponse.json(
@@ -63,7 +65,7 @@ export async function GET(
         canEvolve: canEvolve,
         cry  : pokemonData.cries.latest
     }
-    return pokemon
+    return NextResponse.json(pokemon); 
   } catch (err) {
     console.log(err)
     return NextResponse.json(

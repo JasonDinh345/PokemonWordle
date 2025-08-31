@@ -4,11 +4,11 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ gen: string }> }
 ) {
-  // ✅ await params
+ 
   const { gen } = await context.params;
   try {
     const res = await fetch(`https://pokeapi.co/api/v2/generation/${gen}/`, {
-      cache: "no-store", // prevents Next.js from caching during dev
+      cache: "no-store", 
     });
     if (!res.ok) {
         
