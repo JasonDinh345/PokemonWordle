@@ -68,8 +68,10 @@ const determineCanEvolve = (name: string, evoChain: EvolvesTo): boolean => {
 };
 export const getAllPokemonInGen = async(generationID: number):Promise<GenerationPokemon>=>{
     try{
+        console.log(`attepting fetch on ${generationID}`)
         const generationRes = await fetch(`https://pokeapi.co/api/v2/generation/${generationID}/`)
         const generationData = await generationRes.json()
+        console.log(`attepting fetch on ${generationID} done`)
         return {
             id: generationData.id,
             name: generationData.main_region.name,
