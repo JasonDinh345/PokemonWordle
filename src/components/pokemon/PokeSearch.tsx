@@ -16,11 +16,13 @@ export default function PokeSearch() {
   const [isFocused, setIsFocused] = useState<boolean>(false)
 
   const {pokemonList, error, isReady} = useAllPokemon();
+  console.log(pokemonList)
   const {pokemonChoiceList, addChoice} = useGameState();
   const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
-  
+  console.log(matchingPokemon)
   const filteredPokemon = matchingPokemon.slice(0, 10);
+  console.log(filteredPokemon)
   if(error){
     return <p className="text-sm text-gray-700 p-2 text-center italic color-red">{error}</p>
   }
