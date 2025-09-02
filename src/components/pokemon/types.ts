@@ -44,3 +44,9 @@ export type Entry = {
     language: SimpleData
     version : SimpleData
 }
+export type PokeSuggestionType = {
+  name: string
+  sprites: {
+    front_default: string
+  }
+}

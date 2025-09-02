@@ -4,6 +4,7 @@ import { getPokemon } from "@/utils/getPokemon";
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useAllPokemon } from "./AllPokemonContext";
+import { playCry } from "@/utils/playCry";
 
 type GameStateContextProps = {
     pokemonChoiceList: Pokemon[]
@@ -41,8 +42,10 @@ export const GameStateProvider = ({ children }: { children: ReactNode }) => {
         if(result){
           const newChoice = result as Pokemon
           const updatedList:Pokemon[] = [...pokemonChoiceList, newChoice]
+          playCry(newChoice.cry, volume)
           setPokemonChoiceList(updatedList)
         }
+        
         setIsLoading(false)          
       }
     const resetGame = async() =>{

@@ -1,4 +1,4 @@
-import { DexEntry, EvolvesTo, GenerationPokemon, Pokemon } from "@/components/pokemon/types";
+import { DexEntry, EvolvesTo, GenerationPokemon, Pokemon, PokeSuggestionType } from "@/components/pokemon/types";
 
 export const getPokemon = async(name:string):Promise<Pokemon> =>{
     const res = await fetch(`/api/pokemon/${name}`);
@@ -37,4 +37,12 @@ export const getEntry = async(id:number):Promise<DexEntry> =>{
     }
     const data = await res.json();
     return data as DexEntry;
+}
+export const getPokemonSuggestion = async(name:string):Promise<PokeSuggestionType> =>{
+  const res = await fetch(`/api/pokeSuggestion/${name}`);
+  if (!res.ok) {
+        throw new Error(`Failed to load Pokemon: ${name}`);
+    }
+    const data = await res.json();
+    return data as PokeSuggestionType;
 }

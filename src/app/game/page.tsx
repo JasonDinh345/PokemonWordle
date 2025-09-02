@@ -8,6 +8,7 @@ import GenerationChooser from "@/components/pokemon/GenerationChooser";
 import HintsBar from "@/components/pokemon/HintsBar"
 
 import { GameStateProvider } from "@/context/GameStateContext";
+import VolumeControl from "@/components/VolumeControl";
 
 
 
@@ -26,8 +27,8 @@ export default function Game() {
           
          
           <div className="flex flex-col justify-center items-center relative">
-            
             <h1 className="text-5xl py-6 font-bold text-center">Pokédle</h1>
+            <VolumeControl/>
             <GenerationChooser/>
             <PokeSearch/>
             <HintsBar/>
