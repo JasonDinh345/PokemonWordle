@@ -12,29 +12,29 @@ import { useGameState } from "@/context/GameStateContext";
 
 export default function HintsBar() {
 
-    const { hiddenPokemon } = useGameState();
-    const {volume, pokemonChoiceList} = useGameState()
+  const { hiddenPokemon } = useGameState();
+  const {volume, pokemonChoiceList} = useGameState()
 
-    const numGuesses = useMemo(()=>
-      pokemonChoiceList.length
-    ,[pokemonChoiceList]) 
-    return (
-        <>
-        {hiddenPokemon && (
-            <div className="my-4 flex flex-row gap-2">
-              <HintBox minGuesses={3} currentNum={numGuesses} hint="Pokemon Cry "icon="/sound.svg">
-                <PokeCryHint cry={hiddenPokemon.cry} volume={volume}/>
-              </HintBox>
-              <HintBox minGuesses={5} currentNum={numGuesses} hint="Dex Entry"icon="/pokedex.svg">
-                <DexEntryHint />
-              </HintBox>
-              <HintBox minGuesses={8} currentNum={numGuesses} hint="Shadow Sprite"icon="/pokeball.svg">
-                <SpriteHint />
-              </HintBox>
-            </div>
-        )}
-        </>
-    );
+  const numGuesses = useMemo(()=>
+    pokemonChoiceList.length
+  ,[pokemonChoiceList]) 
+  return (
+      <>
+      {hiddenPokemon && (
+          <div className="my-4 flex flex-row gap-2">
+            <HintBox minGuesses={3} currentNum={numGuesses} hint="Pokemon Cry "icon="/sound.svg">
+              <PokeCryHint cry={hiddenPokemon.cry} volume={volume}/>
+            </HintBox>
+            <HintBox minGuesses={5} currentNum={numGuesses} hint="Dex Entry"icon="/pokedex.svg">
+              <DexEntryHint />
+            </HintBox>
+            <HintBox minGuesses={8} currentNum={numGuesses} hint="Shadow Sprite"icon="/pokeball.svg">
+              <SpriteHint />
+            </HintBox>
+          </div>
+      )}
+      </>
+  );
 }
 type PokeCryHintProp = {
   cry: string
@@ -72,8 +72,10 @@ function DexEntryHint() {
   return (
     <>
     <div className="flex items-center justify-center size-full flex-col" onClick={handleOnClick}>
-       <Image className="" width={24} height={24} src="/pokedex.svg" alt="Click to see the dex entry!"/>
-       <p className="text-xs">Dex Entry</p>
+      <div className="relative w-6 h-6">
+        <Image className="" fill src="/pokedex.svg" alt="Click to see the dex entry!"/>
+      </div>
+      <p className="text-xs">Dex Entry</p>
     </div>
     <Popup isShown={isShown} setIsShownAction={setIsShown}>
       {entry ? 
@@ -108,7 +110,7 @@ function SpriteHint(){
   return(
     <>
     <div className="flex items-center justify-center size-full flex-col" onClick={()=>setIsShown(true)}>
-       <Image className="" width={24} height={24} src="/pokeball.svg" alt="Click to see the shadow sprite!"/>
+       <Image width={24} height={24} src="/pokeball.svg" alt="Click to see the shadow sprite!"/>
        <p className="text-xs">Shadow Sprite</p>
     </div>
     {isShown && (

@@ -3,6 +3,7 @@ import { allGenerations } from "@/utils/allGenerations";
 import { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 
+
 type ChosenGenerationContextType = {
     chosenGenerations : number[]
     updatedChosenGenerations: (genName: string, type: "add" | "remove")=>  void
@@ -11,7 +12,7 @@ const ChosenGenerationContext = createContext<ChosenGenerationContextType | unde
 
 export const ChosenGenerationProvider = ({ children }: { children: ReactNode })=>{
     const [chosenGenerations, setChosenGenerations] = useState<number[]>([1])
-    
+
     const updatedChosenGenerations = useCallback((genName: string, type: "add" | "remove") => {
   
         const genNum = allGenerations[genName];
@@ -23,6 +24,7 @@ export const ChosenGenerationProvider = ({ children }: { children: ReactNode })=
         }else{
             if(chosenGenerations.length === 1){
                 window.alert("Must have at least one generation active!")
+                return;
             }
             const updatedList = chosenGenerations.filter(gen =>
             gen !== genNum

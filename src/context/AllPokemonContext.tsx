@@ -32,7 +32,7 @@ export const AllPokemonProvider = ({children}:{children: ReactNode}) =>{
 
     //do a is ready
     useEffect(() => {
-
+        setIsReady(false)
         const fetchGens = async () => {
             for (const genID of chosenGenerations) {
                 if (!loadedGenerations.has(genID)) {

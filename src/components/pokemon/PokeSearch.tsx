@@ -5,6 +5,8 @@ import Image from 'next/image'
 
 import { useAllPokemon } from '@/context/AllPokemonContext';
 import { useGameState } from '@/context/GameStateContext';
+import { PokeSuggestionType } from './types';
+import { getPokemonSuggestion } from '@/utils/getPokemon';
 
 
 
@@ -16,11 +18,13 @@ export default function PokeSearch() {
   const [isFocused, setIsFocused] = useState<boolean>(false)
 
   const {pokemonList, error, isReady} = useAllPokemon();
+  
   const {pokemonChoiceList, addChoice} = useGameState();
   const matchingPokemon = pokemonList.filter(pokemon =>
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
-  
+ 
   const filteredPokemon = matchingPokemon.slice(0, 10);
+  
   if(error){
     return <p className="text-sm text-gray-700 p-2 text-center italic color-red">{error}</p>
   }
@@ -31,11 +35,13 @@ export default function PokeSearch() {
       <>
         <input
           type="text"
+          id='pokeSearch'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder="Enter a Pokémon name"
+          autoComplete="off"
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
         />
 
@@ -64,10 +70,10 @@ export default function PokeSearch() {
   const [pokemonData, setPokemonData] = useState<PokeSuggestionType | null>(null)
   useEffect(()=>{
     const fetchData = async () => {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name.toLowerCase()}`);
-        const data = await res.json();
+        const data = await getPokemonSuggestion(pokemon.name)
         
-        setPokemonData({name: data.name, sprites: {front_default: data.sprites.front_default}});
+        
+        setPokemonData(data);
       };
       fetchData();
   },[pokemon.name])
@@ -91,10 +97,5 @@ export default function PokeSearch() {
 type PokeSuggestionProp = {
     pokemon: {name: string, url:string}
 }
-type PokeSuggestionType = {
-  name: string
-  sprites: {
-    front_default: string
-  }
-}
+
 
