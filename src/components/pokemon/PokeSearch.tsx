@@ -24,7 +24,7 @@ export default function PokeSearch() {
     pokemon.name.toLowerCase().startsWith(query.toLowerCase()) && !pokemonChoiceList.some(choice=> choice.name === pokemon.name))
  
   const filteredPokemon = matchingPokemon.slice(0, 10);
-  
+ 
   if(error){
     return <p className="text-sm text-gray-700 p-2 text-center italic color-red">{error}</p>
   }
@@ -70,15 +70,17 @@ export default function PokeSearch() {
   const [pokemonData, setPokemonData] = useState<PokeSuggestionType | null>(null)
   useEffect(()=>{
     const fetchData = async () => {
-        const data = await getPokemonSuggestion(pokemon.name)
+        const id = pokemon.url.split("/").filter(Boolean).pop();
+        const data = await getPokemonSuggestion(id ?? "")
         
         
         setPokemonData(data);
       };
       fetchData();
-  },[pokemon.name])
+  },[pokemon.url])
   const handleClick = ()=>{
-    addChoice(pokemon.name)
+    const id = pokemon.url.split("/").filter(Boolean).pop();
+    addChoice(id ?? "")
     setQuery("")
   }
     return(
